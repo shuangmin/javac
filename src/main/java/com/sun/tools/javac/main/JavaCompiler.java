@@ -69,15 +69,7 @@ import com.sun.tools.javac.tree.Pretty;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.tree.TreeTranslator;
-import com.sun.tools.javac.util.Abort;
-import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.ListBuffer;
-import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Options;
-import com.sun.tools.javac.util.Pair;
-import com.sun.tools.javac.util.Position;
+import com.sun.tools.javac.util.*;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -824,12 +816,24 @@ public class JavaCompiler implements ClassReader.SourceCompleter {
         start_msec = now();
         try {
             initProcessAnnotations(processors);
+            Printer.p("compile processors ", processors);
 
             // These method calls must be chained to avoid memory leaks
-            delegateCompiler =
-                processAnnotations(
-                    enterTrees(stopIfError(CompileState.PARSE, parseFiles(sourceFileObjects))),
-                    classnames);
+
+            List<JCCompilationUnit> files = parseFiles(sourceFileObjects);
+
+            for (JCCompilationUnit file : files) {
+                file.toString();
+            }
+
+
+            List<JCCompilationUnit> enterFiles = enterTrees(stopIfError(CompileState.PARSE, files));
+            for (JCCompilationUnit file : files) {
+                file.toString();
+            }
+            //Printer.p("List<JCCompilationUnit>",files);
+
+            delegateCompiler = processAnnotations(enterFiles, classnames);
 
             delegateCompiler.compile2();
             delegateCompiler.close();

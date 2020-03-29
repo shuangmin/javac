@@ -38,7 +38,7 @@ import java.lang.reflect.Method;
  * {@link #compile(java.lang.String[],java.io.PrintWriter)},
  * nothing described in this source file is part of any supported
  * API.  If you write code that depends on this, you do so at your own
- * risk.  This code and its internal interfaces are subject to change
+ * risk.  This code and its internal interfaces are ssubject to change
  * or deletion without notice.
  */
 public class Main {
@@ -53,6 +53,12 @@ public class Main {
      * @param args   The command line parameters.
      */
     public static void main(String[] args) throws Exception {
+        args = new String[3];
+        args[0] = "/Users/rander/code/javac/src/main/java/com/sun/tools/javac/Hello.java";
+//        args[1] = "/Users/rander/code/javac/src/main/java/com/sun/tools/javac/Me.java";
+//        args[1] = "com.sun.tools.javac.Me.java";
+        args[1] = "-d";
+        args[2] = "/Users/rander/code/javac/src/main/java/com/sun/tools/javac/aa";
       if (args.length > 0 && args[0].equals("-Xjdb")) {
         String[] newargs = new String[args.length + 2];
         Class<?> c = Class.forName("com.sun.tools.example.debug.tty.TTY");

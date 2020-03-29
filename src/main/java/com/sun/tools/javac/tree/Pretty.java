@@ -454,6 +454,7 @@ public class Pretty extends JCTree.Visitor {
 
     public void visitClassDef(JCClassDecl tree) {
         try {
+            System.out.println("visitClassDef " + out.toString());
             println(); align();
             printDocComment(tree);
             printAnnotations(tree.mods.annotations);
@@ -523,6 +524,7 @@ public class Pretty extends JCTree.Visitor {
             } else {
                 print(";");
             }
+            System.out.println("visitMethodDef " + out.toString());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

@@ -2238,14 +2238,14 @@ public class ClassReader extends ClassFile implements Completer {
     private void fillIn(PackageSymbol p) throws IOException {
         if (p.members_field == null) p.members_field = new Scope(p);
         String packageName = p.fullname.toString();
-
         Set<JavaFileObject.Kind> kinds = getPackageFileKinds();
 
-        fillIn(p, PLATFORM_CLASS_PATH,
-               fileManager.list(PLATFORM_CLASS_PATH,
-                                packageName,
-                                EnumSet.of(JavaFileObject.Kind.CLASS),
-                                false));
+        Iterable<JavaFileObject> files = fileManager.list(PLATFORM_CLASS_PATH,
+                packageName,
+                EnumSet.of(JavaFileObject.Kind.CLASS),
+                false);
+
+        fillIn(p, PLATFORM_CLASS_PATH, files);
 
         Set<JavaFileObject.Kind> classKinds = EnumSet.copyOf(kinds);
         classKinds.remove(JavaFileObject.Kind.SOURCE);
@@ -2287,11 +2287,12 @@ public class ClassReader extends ClassFile implements Completer {
         }
 
         if (wantSourceFiles && !haveSourcePath) {
-            fillIn(p, CLASS_PATH,
-                   fileManager.list(CLASS_PATH,
-                                    packageName,
-                                    kinds,
-                                    false));
+            Iterable<JavaFileObject> classPathFiles =
+                    fileManager.list(CLASS_PATH,
+                            packageName,
+                            kinds,
+                            false);
+            fillIn(p, CLASS_PATH,classPathFiles);
         } else {
             if (wantClassFiles)
                 fillIn(p, CLASS_PATH,

@@ -32,15 +32,7 @@ import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.main.JavacOption.Option;
 import com.sun.tools.javac.main.RecognizedOptions.OptionHelper;
 import com.sun.tools.javac.processing.AnnotationProcessingError;
-import com.sun.tools.javac.util.ClientCodeException;
-import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.FatalError;
-import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.ListBuffer;
-import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Messages;
-import com.sun.tools.javac.util.Options;
-import com.sun.tools.javac.util.PropagatedException;
+import com.sun.tools.javac.util.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -343,7 +335,10 @@ public class Main {
 
             List<File> files;
             try {
-                files = processArgs(CommandLine.parse(args));
+                String[] result = CommandLine.parse(args);
+                Printer.p("commandline",result);
+                files = processArgs(result);
+                Printer.p("files",files);
                 if (files == null) {
                     // null signals an error in options, abort
                     return EXIT_CMDERR;
@@ -393,6 +388,8 @@ public class Main {
                 for (JavaFileObject fo : otherFiles)
                     fileObjects = fileObjects.prepend(fo);
             }
+
+            Printer.p("processors",processors);
             comp.compile(fileObjects,
                          classnames.toList(),
                          processors);
